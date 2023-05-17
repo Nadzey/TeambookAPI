@@ -1,0 +1,946 @@
+{
+	"info": {
+		"_postman_id": "a6739ca6-3c16-4cf3-8651-bbe95a94eee6",
+		"name": "TeambookAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "17688954-a6739ca6-3c16-4cf3-8651-bbe95a94eee6"
+	},
+	"item": [
+		{
+			"name": "register new account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e4e64ca3-8ef4-4a24-8e74-643247dd1742",
+						"exec": [
+							"const token = pm.response.text();\r",
+							"\r",
+							"// Set the \"token\" variable\r",
+							"pm.environment.set(\"token\", token);\r",
+							"\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "f62e1349-1b91-4518-808a-0cc238b2b990",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "account_name",
+							"value": "{{$randomCompanyName}}",
+							"type": "text"
+						},
+						{
+							"key": "user[first_name]",
+							"value": "{{$randomFirstName}}",
+							"type": "text"
+						},
+						{
+							"key": "user[last_name]",
+							"value": "{{$randomLastName}}",
+							"type": "text"
+						},
+						{
+							"key": "user[email]",
+							"value": "{{$randomEmail}}",
+							"type": "text"
+						},
+						{
+							"key": "user[password]",
+							"value": "Test123!",
+							"type": "text"
+						},
+						{
+							"key": "user[password_confirmation]",
+							"value": "Test123!",
+							"type": "text"
+						},
+						{
+							"key": "user[marketing_emails]",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "user[timezone]",
+							"value": "800",
+							"type": "text"
+						},
+						{
+							"key": "language",
+							"value": "en",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/register",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get account settings without token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f5a318fe-651a-4665-a79d-ef5733f9a9a9",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "97d98094-5a34-434d-bad4-9814e1b30262",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://web.teambooktest.com/api/account/settings",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"account",
+						"settings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get  account settings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dd612b82-2370-4f77-88b4-68892382d85b",
+						"exec": [
+							"// Преобразование JSON-строки в объект\r",
+							"const responseJson = JSON.parse(responseBody);\r",
+							"\r",
+							"// Создание переменных из значений объекта\r",
+							"pm.environment.set(\"accountId\", responseJson.id.toString());\r",
+							"pm.globals.unset(\"variable_key\");\r",
+							"pm.environment.set(\"account_name\", responseJson.name);\r",
+							"\r",
+							"// Доступ к вложенным значениям\r",
+							"const adminUser = responseJson.admin_users[0];\r",
+							"pm.environment.set(\"admin_id\", adminUser.id.toString());\r",
+							"pm.environment.set(\"admin_first_name\", adminUser.first_name);\r",
+							"pm.environment.set(\"admin_last_name\", adminUser.last_name);\r",
+							"pm.environment.set(\"admin_email\", adminUser.email);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body has required fields\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(jsonData.id).to.exist;\r",
+							"    pm.expect(jsonData.name).to.exist;\r",
+							"    pm.expect(jsonData.default_booking_duration).to.exist;\r",
+							"    pm.expect(jsonData.first_week_day).to.exist;\r",
+							"    pm.expect(jsonData.language).to.exist;\r",
+							"    pm.expect(jsonData.schedule).to.exist;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"name is not empty\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body has required fields\", function () {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const adminUser = responseJson.admin_users[0];\r",
+							"    pm.expect(adminUser.id).to.exist;\r",
+							"    pm.expect(adminUser.first_name).to.exist;\r",
+							"    pm.expect(adminUser.last_name).to.exist;\r",
+							"    pm.expect(adminUser.email).to.exist;\r",
+							"    pm.expect(adminUser.calendar_token).to.exist;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "726234fc-76d8-4f83-9d2e-e6497e985c03",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/account/settings",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"account",
+						"settings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "84f9451a-4057-4564-8456-c345daf39c12",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body has required fields\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(jsonData.id).to.exist;\r",
+							"    pm.expect(jsonData.name).to.exist;\r",
+							"    pm.expect(jsonData.default_booking_duration).to.exist;\r",
+							"    pm.expect(jsonData.first_week_day).to.exist;\r",
+							"    pm.expect(jsonData.language).to.exist;\r",
+							"    pm.expect(jsonData.schedule).to.exist;\r",
+							"});\r",
+							"pm.test(\"Response body has required fields\", function () {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const adminUser = responseJson.admin_users[0];\r",
+							"    pm.expect(adminUser.id).to.exist;\r",
+							"    pm.expect(adminUser.first_name).to.exist;\r",
+							"    pm.expect(adminUser.last_name).to.exist;\r",
+							"    pm.expect(adminUser.email).to.exist;\r",
+							"    pm.expect(adminUser.calendar_token).to.exist;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "d0f68b0a-2aaa-4f8b-9051-df33db7fd1ef",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "account[name]",
+							"value": "{{account_name}}",
+							"type": "text"
+						},
+						{
+							"key": "account[default_booking_duration]",
+							"value": "480",
+							"type": "text"
+						},
+						{
+							"key": "account[time_zone]",
+							"value": "PCT",
+							"type": "text"
+						},
+						{
+							"key": "account[first_week_day]",
+							"value": "{{$randomWeekday}}",
+							"type": "text"
+						},
+						{
+							"key": "account[date_format]",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "user[token]",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/account",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get  profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c6a43a03-a843-4048-ac4a-7c69ab9b9da4",
+						"exec": [
+							"const responseJson = JSON.parse(responseBody);\r",
+							"pm.environment.set(\"calendar_token\", responseJson.calendar_token);\r",
+							"pm.environment.set(\"team_ids\", responseJson.team_ids.toString())\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body has required fields\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(jsonData.id).to.exist;\r",
+							"    pm.expect(jsonData.first_name).to.exist;\r",
+							"    pm.expect(jsonData.last_name).to.exist;\r",
+							"    pm.expect(jsonData.email).to.exist;\r",
+							"    pm.expect(jsonData.account_id).to.exist;\r",
+							"    pm.expect(jsonData.calendar_token).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "582208f6-4f2f-4742-b7be-f17cc6449355",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/profile",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e8f91c91-de6f-4032-bd2f-23c1a620fdae",
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.environment.set(\"customer_id\", jsonData.id);\r",
+							"pm.environment.set(\"customer_name\", jsonData.name);\r",
+							"\r",
+							"pm.environment.set(\"braintree_customer_id\", jsonData.braintree_customer_id);\r",
+							"pm.environment.set(\"api_token\", jsonData.api_token);\r",
+							"pm.environment.set(\"coupon\", jsonData.coupon);\r",
+							"\r",
+							"pm.environment.set(\"admin_id\", jsonData.admin_users[0].id);\r",
+							"pm.environment.set(\"admin_first_name\", jsonData.admin_users[0].first_name);\r",
+							"pm.environment.set(\"admin_last_name\", jsonData.admin_users[0].last_name);\r",
+							"pm.environment.set(\"admin_name\", jsonData.admin_users[0].name);\r",
+							"pm.environment.set(\"admin_email\", jsonData.admin_users[0].email);\r",
+							"\r",
+							"pm.environment.set(\"admin_account_id\", jsonData.admin_users[0].account_id);\r",
+							"pm.environment.set(\"admin_calendar_token\", jsonData.admin_users[0].calendar_token);\r",
+							"\r",
+							"pm.environment.set(\"subscription_id\", jsonData.subscription.id);\r",
+							"pm.environment.set(\"subscription_account_id\", jsonData.subscription.account_id);\r",
+							"pm.environment.set(\"subscription_plan_id\", jsonData.subscription.plan_id);\r",
+							"\r",
+							"\r",
+							"pm.environment.set(\"braintree_plan_id\", jsonData.braintree_plan.id);\r",
+							"pm.environment.set(\"braintree_plan_name\", jsonData.braintree_plan.plan_name);\r",
+							"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body has required fields\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(jsonData.id).to.exist;\r",
+							"    pm.expect(jsonData.name).to.exist;\r",
+							"    pm.expect(jsonData.default_booking_duration).to.exist;\r",
+							"    pm.expect(jsonData.first_week_day).to.exist;\r",
+							"    pm.expect(jsonData.language).to.exist;\r",
+							"    pm.expect(jsonData.schedule).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"name is not empty\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.not.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body has required fields\", function () {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const adminUser = responseJson.admin_users[0];\r",
+							"    pm.expect(adminUser.id).to.exist;\r",
+							"    pm.expect(adminUser.first_name).to.exist;\r",
+							"    pm.expect(adminUser.last_name).to.exist;\r",
+							"    pm.expect(adminUser.email).to.exist;\r",
+							"    pm.expect(adminUser.calendar_token).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "f1e43ee8-8511-4a17-8cff-bbf18e0d78bc",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "text"
+						},
+						{
+							"key": "first_name",
+							"value": "{{$randomFirstName}}",
+							"type": "text"
+						},
+						{
+							"key": "last_name",
+							"value": "{{$randomLastName}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{$randomEmail}}",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "{{$randomCountry}}",
+							"type": "text"
+						},
+						{
+							"key": "company_name",
+							"value": "{{$randomCompanyName}}",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "{{$randomCity}}",
+							"type": "text"
+						},
+						{
+							"key": "postal_code",
+							"value": "{{$randomCountryCode}}",
+							"type": "text"
+						},
+						{
+							"key": "street_address",
+							"value": "{{$randomStreetAddress}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/billing/create_customer",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"billing",
+						"create_customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08400fc9-2117-445b-bd5a-35b361cfcd8d",
+						"exec": [
+							"pm.test(\"Status code is 500\", function () {\r",
+							"    pm.response.to.have.status(500);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "328240ec-06ba-4d56-bed4-63751d4bfc39",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "text"
+						},
+						{
+							"key": "first_name",
+							"value": "{{$randomFirstName}}",
+							"type": "text"
+						},
+						{
+							"key": "last_name",
+							"value": "{{$randomLastName}}",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "{{admin_email}}",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "{{$randomCountry}}",
+							"type": "text"
+						},
+						{
+							"key": "company_name",
+							"value": "{{account_name}}",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "{{$randomCity}}",
+							"type": "text"
+						},
+						{
+							"key": "postal_code",
+							"value": "{{$randomCountryCode}}",
+							"type": "text"
+						},
+						{
+							"key": "street_address",
+							"value": "{{$randomStreetAddress}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/billing/update_customer",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"billing",
+						"update_customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get  customer info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "634bb2e4-d162-4cd8-845e-39ae264e70df",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body has required fields\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(jsonData.first_name).to.exist;\r",
+							"    pm.expect(jsonData.last_name).to.exist;\r",
+							"    pm.expect(jsonData.email).to.exist;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "339270ed-ab19-4486-a613-b1c83908f5e4",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/billing/customer_info",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"billing",
+						"customer_info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get calendar",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "347acd68-d8b7-4019-9e47-1ec8e9b5ab43",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "499a123e-78fb-431a-b49e-26b553b1e43e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/calendar/{{calendar_token}}",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"calendar",
+						"{{calendar_token}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login admin with wrong password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0bc25497-8147-47f3-888a-3c952edcdee7",
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "5c500158-d38d-4d09-ac94-664175540631",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "{{admin_email}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Test123!",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/administration/login",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"administration",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete accaunt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "35971ecd-664d-4390-8af9-bafbb0bb4c1a",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\", );\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "cb786214-da8f-4d11-8f13-ca3da3b72460",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/account",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"account"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMDgxMSwiZXhwIjoiMTgzOTc4NzU0NCJ9.tXLLhXcBz4Ww1qZPTSP4rsNuwFG3nQo4ND7Qj8zHdUE",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ae079cf9-6060-466c-822d-17b516ed2cce",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ba4a05c6-1cfc-44b3-8d00-44fca0e3cbf6",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
