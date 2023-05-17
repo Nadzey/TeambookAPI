@@ -24,8 +24,8 @@
 							"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"pm.test(\"Content-Type header is text\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"text/plain\");\r",
 							"});\r",
 							""
 						],
@@ -122,7 +122,7 @@
 							"});\r",
 							"\r",
 							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\", \"application/json\");\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -281,6 +281,10 @@
 							"    pm.expect(adminUser.last_name).to.exist;\r",
 							"    pm.expect(adminUser.email).to.exist;\r",
 							"    pm.expect(adminUser.calendar_token).to.exist;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -461,7 +465,7 @@
 							"});\r",
 							"\r",
 							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Response body has required fields\", function () {\r",
@@ -474,7 +478,6 @@
 							"    pm.expect(jsonData.language).to.exist;\r",
 							"    pm.expect(jsonData.schedule).to.exist;\r",
 							"});\r",
-							"\r",
 							"\r",
 							"pm.test(\"name is not empty\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
@@ -490,8 +493,6 @@
 							"    pm.expect(adminUser.email).to.exist;\r",
 							"    pm.expect(adminUser.calendar_token).to.exist;\r",
 							"});\r",
-							"\r",
-							"\r",
 							""
 						],
 						"type": "text/javascript"
@@ -689,7 +690,7 @@
 							"});\r",
 							"\r",
 							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
 							"});\r",
 							""
 						],
@@ -746,8 +747,8 @@
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"pm.test(\"Content-Type header is text/html\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"text/html\");\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -804,8 +805,8 @@
 							"    pm.response.to.have.status(403);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"pm.test(\"Content-Type header is text\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"text/plain\");\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -867,7 +868,7 @@
 							"});\r",
 							"\r",
 							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\", );\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
 							"});"
 						],
 						"type": "text/javascript"
