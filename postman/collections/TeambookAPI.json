@@ -28,9 +28,6 @@
 							"pm.test(\"Content-Type header is text\", function () {\r",
 							"    pm.response.to.have.header(\"Content-Type\", \"text/plain\");\r",
 
-							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\");\r",
-
 							"});\r",
 							""
 						],
@@ -130,8 +127,6 @@
 
 							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\", \"application/json\");\r",
 
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
-
 							"});"
 						],
 						"type": "text/javascript"
@@ -173,12 +168,12 @@
 							"// Преобразование JSON-строки в объект\r",
 							"const responseJson = JSON.parse(responseBody);\r",
 							"\r",
-							"// Создание переменных из значений объекта\r",
+							
 							"pm.environment.set(\"accountId\", responseJson.id.toString());\r",
 							"pm.globals.unset(\"variable_key\");\r",
 							"pm.environment.set(\"account_name\", responseJson.name);\r",
 							"\r",
-							"// Доступ к вложенным значениям\r",
+			
 							"const adminUser = responseJson.admin_users[0];\r",
 							"pm.environment.set(\"admin_id\", adminUser.id.toString());\r",
 							"pm.environment.set(\"admin_first_name\", adminUser.first_name);\r",
@@ -480,8 +475,6 @@
 
 							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
 
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
-
 							"});\r",
 							"\r",
 							"pm.test(\"Response body has required fields\", function () {\r",
@@ -717,9 +710,6 @@
 							"pm.test(\"Content-Type header is application/json\", function () {\r",
 
 							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
-
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
-
 							"});\r",
 							""
 						],
@@ -780,9 +770,6 @@
 							"pm.test(\"Content-Type header is text/html\", function () {\r",
 							"    pm.response.to.have.header(\"Content-Type\", \"text/html\");\r",
 
-							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\");\r",
-
 							"});"
 						],
 						"type": "text/javascript"
@@ -842,9 +829,6 @@
 
 							"pm.test(\"Content-Type header is text\", function () {\r",
 							"    pm.response.to.have.header(\"Content-Type\", \"text/plain\");\r",
-
-							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\");\r",
 
 							"});"
 						],
@@ -909,8 +893,6 @@
 							"pm.test(\"Content-Type header is application/json\", function () {\r",
 
 							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
-
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\", );\r",
 
 							"});"
 						],
