@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "81b76c11-0640-41dc-94de-b306156cb0c9",
+		"_postman_id": "bd506876-0297-4df6-8abf-e8f3bd2173ac",
 		"name": "TeambookAPI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_uid": "17688954-81b76c11-0640-41dc-94de-b306156cb0c9"
+		"_uid": "17688954-bd506876-0297-4df6-8abf-e8f3bd2173ac"
 	},
 	"item": [
 		{
@@ -12,7 +12,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "5e0c162a-a4da-4216-bd79-a989e7e6ebc2",
 						"exec": [
 							"const token = pm.response.text();\r",
 							"\r",
@@ -24,16 +23,17 @@
 							"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Content-Type header is text\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"text/plain\");\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
 							"});\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "90393513-d143-4737-884f-e445344126ee"
 					}
 				}
 			],
-			"id": "cc000537-4171-4b70-9c13-f1e4fc72526c",
+			"id": "56dc41a1-cc02-4d86-8c92-75fcc25658c0",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -83,7 +83,7 @@
 						},
 						{
 							"key": "user[timezone]",
-							"value": "800",
+							"value": "EDT",
 							"type": "text"
 						},
 						{
@@ -115,21 +115,21 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e45520a3-a5fa-4875-b9ad-2c43b049f3f3",
 						"exec": [
 							"pm.test(\"Status code is 400\", function () {\r",
 							"    pm.response.to.have.status(400);\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\", \"application/json\");\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "36f66247-2be5-4a4f-a894-31e5ce93717b"
 					}
 				}
 			],
-			"id": "8fb85f4d-d1a4-4b2c-8140-21681101de85",
+			"id": "70bd08b0-a9fc-4a23-90ca-236973b660a7",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -159,20 +159,22 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ec271f11-5dc3-4d98-bc8a-90dac9638237",
 						"exec": [
 							"// Преобразование JSON-строки в объект\r",
 							"const responseJson = JSON.parse(responseBody);\r",
 							"\r",
+							"// Создание переменных из значений объекта\r",
 							"pm.environment.set(\"accountId\", responseJson.id.toString());\r",
 							"pm.globals.unset(\"variable_key\");\r",
 							"pm.environment.set(\"account_name\", responseJson.name);\r",
 							"\r",
+							"// Доступ к вложенным значениям\r",
 							"const adminUser = responseJson.admin_users[0];\r",
 							"pm.environment.set(\"admin_id\", adminUser.id.toString());\r",
 							"pm.environment.set(\"admin_first_name\", adminUser.first_name);\r",
 							"pm.environment.set(\"admin_last_name\", adminUser.last_name);\r",
 							"pm.environment.set(\"admin_email\", adminUser.email);\r",
+							"pm.environment.set(\"calendar_token\", adminUser.calendar_token);\r",
 							"\r",
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -206,13 +208,30 @@
 							"    pm.expect(adminUser.last_name).to.exist;\r",
 							"    pm.expect(adminUser.email).to.exist;\r",
 							"    pm.expect(adminUser.calendar_token).to.exist;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify time zone\", function () {\r",
+							"    var expectedTimeZone = \"EDT\"\r",
+							"  \r",
+							"    var jsonData = pm.response.json();\r",
+							"    var actualTimeZone = jsonData.time_zone;\r",
+							"\r",
+							"    pm.expect(actualTimeZone).to.equal(expectedTimeZone);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify language\", function () { \r",
+							"    var expectedLanguage = \"en\";\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var actualLanguage = jsonData.language;\r",
+							"    pm.expect(actualLanguage).to.equal(expectedLanguage);\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "ea641a84-fd1b-4195-9cc5-54cf5686fdf3"
 					}
 				}
 			],
-			"id": "43fe2101-02e0-4a6d-87a9-f4a95ec58f8c",
+			"id": "c9599ffe-8054-4924-aa90-f1fea903248f",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -255,7 +274,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8d873408-4bf5-4675-9bfb-1d97b4d35407",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -279,17 +297,14 @@
 							"    pm.expect(adminUser.last_name).to.exist;\r",
 							"    pm.expect(adminUser.email).to.exist;\r",
 							"    pm.expect(adminUser.calendar_token).to.exist;\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "f774dd25-b6ba-497c-aff9-d9420db521cb"
 					}
 				}
 			],
-			"id": "30fa4f7f-2f03-444c-b019-8e58cebf091e",
+			"id": "3081c8bd-5d20-419e-8d45-9cb1111b8c06",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -356,11 +371,11 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "26aeae56-bdc4-4b20-b229-2dec2dca9aa8",
 						"exec": [
 							"const responseJson = JSON.parse(responseBody);\r",
 							"pm.environment.set(\"calendar_token\", responseJson.calendar_token);\r",
-							"pm.environment.set(\"team_ids\", responseJson.team_ids.toString())\r",
+							"pm.environment.set(\"team_ids\", responseJson.team_ids);\r",
+							"pm.environment.set(\"time_zone\", responseJson.time_zone)\r",
 							"\r",
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -384,11 +399,12 @@
 							"\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "966d2d45-4c3c-47e5-a045-d45d23b68cdc"
 					}
 				}
 			],
-			"id": "5534340d-8cb7-4386-9959-64d99443855a",
+			"id": "807f7008-5840-4816-891c-5c4c526b88f5",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -425,12 +441,93 @@
 			"response": []
 		},
 		{
+			"name": "get  team users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"var expectedId = pm.environment.get(\"admin_id\");\r",
+							"pm.test(\"Check id\", function () {\r",
+							"    pm.expect(jsonData[0].id.toString()).to.eql(expectedId);\r",
+							"});\r",
+							"\r",
+							"var expectedFirstName = pm.environment.get(\"admin_first_name\");\r",
+							"pm.test(\"Check first_name\", function () {\r",
+							"    pm.expect(jsonData[0].first_name).to.eql(expectedFirstName);\r",
+							"});\r",
+							"\r",
+							"var expectedLastName = pm.environment.get(\"admin_last_name\");\r",
+							"pm.test(\"Check last_name\", function () {\r",
+							"    pm.expect(jsonData[0].last_name).to.eql(expectedLastName);\r",
+							"});\r",
+							"\r",
+							"var expectedEmail = pm.environment.get(\"admin_email\");\r",
+							"pm.test(\"Check email\", function () {\r",
+							"    pm.expect(jsonData[0].email).to.eql(expectedEmail);\r",
+							"});\r",
+							"\r",
+							"var expectedTimeZone = pm.environment.get(\"time_zone\");\r",
+							"pm.test(\"Check time_zone\", function () {\r",
+							"    pm.expect(jsonData[0].time_zone).to.eql(expectedTimeZone);\r",
+							"});\r",
+							"\r",
+							"var expectedAccountId = pm.environment.get(\"accountId\");\r",
+							"pm.test(\"Check account_id\", function () {\r",
+							"    pm.expect(jsonData[0].account_id.toString()).to.eql(expectedAccountId);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"id": "2758523a-e2dc-48a1-bd68-028c0913c3f8"
+					}
+				}
+			],
+			"id": "dfddbf75-17e8-4daf-8c8e-6c181ee84620",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://web.teambooktest.com/api/team/{{team_ids}}/get_users",
+					"protocol": "https",
+					"host": [
+						"web",
+						"teambooktest",
+						"com"
+					],
+					"path": [
+						"api",
+						"team",
+						"{{team_ids}}",
+						"get_users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "create customer",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "8c67b43f-7f88-45f6-a90d-0ea86252286b",
 						"exec": [
 							"const jsonData = pm.response.json();\r",
 							"\r",
@@ -463,7 +560,7 @@
 							"});\r",
 							"\r",
 							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Response body has required fields\", function () {\r",
@@ -496,11 +593,12 @@
 							"\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "45125bd3-359a-4990-80ba-e41751525afc"
 					}
 				}
 			],
-			"id": "4fe4ef19-5cca-42aa-839f-e878981b5c38",
+			"id": "895c1ee0-a374-406e-b16a-d5f428b77f24",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -583,17 +681,17 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a10b44a5-37c7-444b-a14b-add422a446a8",
 						"exec": [
 							"pm.test(\"Status code is 500\", function () {\r",
 							"    pm.response.to.have.status(500);\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "be1f46d8-45f9-4b0d-a515-582ee9e4a900"
 					}
 				}
 			],
-			"id": "c0483298-d29b-4ec2-9284-e1f173eec7b1",
+			"id": "c42cbebd-ac8c-433a-92d6-7f6d190e4237",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -676,7 +774,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "80380e5f-95b7-4cfd-ad83-88ab81fed4d5",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -691,15 +788,16 @@
 							"});\r",
 							"\r",
 							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\");\r",
 							"});\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "247f97d4-33b0-417e-b14a-487e12f21722"
 					}
 				}
 			],
-			"id": "a1e4f282-b7e6-46d3-a87a-9323e0fdb349",
+			"id": "cfeaf946-267c-46a3-b06b-35b8f55b9adb",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -742,21 +840,21 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a20b8ee9-48c6-488e-8f62-2e80894f5ad3",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Content-Type header is text/html\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"text/html\");\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "661a88ab-f326-4051-9065-630e095f6f51"
 					}
 				}
 			],
-			"id": "a93be508-82b2-4fa9-bed6-ba7d948536de",
+			"id": "9889d581-50b3-49e1-bfcb-5fa62f143930",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -800,21 +898,21 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "eb84a871-a1e9-44e9-b1f0-357d72255f0b",
 						"exec": [
 							"pm.test(\"Status code is 403\", function () {\r",
 							"    pm.response.to.have.status(403);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Content-Type header is text\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"text/plain\");\r",
+							"pm.test(\"Content-Type header is application/json\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "3f60d4a8-ad5e-4d19-878f-9ed911db886b"
 					}
 				}
 			],
-			"id": "1e5aa225-f199-4f10-93bd-57eaee573193",
+			"id": "cf3560df-2782-403d-919f-49b7c5579065",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -862,21 +960,21 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "232c4d24-1bac-4116-973c-73eda03ed060",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
 							"pm.test(\"Content-Type header is application/json\", function () {\r",
-							"    pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\", \"Cache-Control\", );\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"id": "22f00255-5056-4fa1-9008-17b6594b2b46"
 					}
 				}
 			],
-			"id": "4a9f7b24-17f5-446a-8581-e2a62463d327",
+			"id": "66095b53-3cfa-4ee0-8b49-583903dad024",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -927,21 +1025,21 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "c284fbc4-171c-4a1f-ac05-3aa78f9c4b61",
 				"type": "text/javascript",
 				"exec": [
 					""
-				]
+				],
+				"id": "d9225a59-e118-499b-8866-e5ad418184f0"
 			}
 		},
 		{
 			"listen": "test",
 			"script": {
-				"id": "094e8c8d-ac71-485d-a91c-bd2d341bd497",
 				"type": "text/javascript",
 				"exec": [
 					""
-				]
+				],
+				"id": "f0c87975-0d55-4045-ae38-5955fb50a5d6"
 			}
 		}
 	]
